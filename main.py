@@ -11,13 +11,9 @@ import time, csv
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get("https://web.whatsapp.com/")
 
-users = turn_file_into_list('r')
+# users = turn_file_into_list('r')
 
 wait = WebDriverWait(driver, 600)
-
-
-
-
 
 driver.get("https://web.whatsapp.com/")
 
@@ -32,20 +28,30 @@ x_path = "//div[@role='application']"
 
 element = driver.find_element(By.XPATH, value=x_path)
 
-print(element)
+# last_heigh = driver.execute_script("return document.body.scrollHeight")
 
-# while 'Yesterday' not in element:
-#     top = element[0]
-#     driver.execute_script("arguments[0].scrollIntoView(true);", top)
-#     time.sleep(2)
+# top = element[0]
+
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(30)
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(2)
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(2)
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(2)
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(2)
+driver.execute_script("arguments[0].scrollIntoView(true)", element)
+time.sleep(2)
 
 
-#     text = driver.find_element(By.XPATH, value=x_path).text
+text = driver.find_element(By.XPATH, value=x_path).text
 
-#     file_path = "output.txt"
+file_path = "output.txt"
 
-#     # Open the file in write mode ('w')
-#     with open(file_path, 'w') as file:
-#         # Write the text to the file
-#         file.write(text)
+# Open the file in write mode ('w')
+with open(file_path, 'w') as file:
+    # Write the text to the file
+    file.write(text)
 
