@@ -2,7 +2,7 @@ import re
 import csv
 
 # Specify the path to your input text file and output CSV file
-input_file_path = 'input.txt'
+input_file_path = 'input_cleaned.txt'
 output_csv_path = 'output.csv'
 
 # Initialize variables to store message data

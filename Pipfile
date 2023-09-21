@@ -6,8 +6,10 @@ name = "pypi"
 [packages]
 selenium = "*"
 webdriver-manager = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.11"
