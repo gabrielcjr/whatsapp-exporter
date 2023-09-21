@@ -27,9 +27,20 @@ soup = BeautifulSoup(application, "html.parser")
 
 elements_with_attribute = soup.select("._1DETJ")
 
+complete_messages = []
+
 for element in elements_with_attribute:
+    single_message = []
     data_pre_plain_text = element['data-pre-plain-text']
-    print(data_pre_plain_text)
+    single_message.append(data_pre_plain_text)
     message = element.select(".selectable-text")
-    soup2 = BeautifulSoup(message[0].span.prettify(), "html.parser")
-    print(soup2.span.get_text())
+    message = BeautifulSoup(message[0].span.prettify(), "html.parser")
+    single_message.append(message.get_text())
+    complete_messages.append(single_message)
+
+
+file_path = "output.txt"
+
+with open(file_path, 'w', encoding="utf_8") as file:
+
+    file.write(complete_messages)
