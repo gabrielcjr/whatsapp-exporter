@@ -6,6 +6,12 @@
 
 Tenha o Google Chrome instalado na sua máquina
 
+Baixe e instale o Python para Windows 
+
+https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe
+
+No PowerShell, execute os seguintes comandos
+
 Instale o pipenv
 
 ```bash
