@@ -21,13 +21,13 @@ pip install pipenv --user
 Entre no shell do pipenv
 
 ```bash
-pipenv shell
+python -m pipenv shell
 ```
 
 Instale as dependências
 
 ```bash
-pipenv install
+python -m pipenv install
 ```
 
 Com isto, basta executar aplicação
