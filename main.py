@@ -15,73 +15,77 @@ wait = WebDriverWait(driver, 600)
 
 driver.get("https://web.whatsapp.com/")
 
-chat_name = "Odonto Classificados BA 1"
+chat_list = ["Odonto Classificados BA 1", "Odonto Classificados SP 6"]
 
-def select_chat_by_name(chat_name):
-    x_arg = '//span[contains(@title, '+ '"' + chat_name + '"'+ ')]'
-    person_title = wait.until(EC.presence_of_element_located((
-    By.XPATH, x_arg)))
-    person_title.click()
-    time.sleep(3)
+date = '20/10/2023'
 
-select_chat_by_name(chat_name)
+for chat in chat_list:
 
-def scroll_screen_to_top_and_copy():
+    def select_chat_by_name(chat):
+        x_arg = '//span[contains(@title, '+ '"' + chat + '"'+ ')]'
+        person_title = wait.until(EC.presence_of_element_located((
+        By.XPATH, x_arg)))
+        person_title.click()
+        time.sleep(3)
 
-    x_path = "//div[@role='application']"
-    element = driver.find_element(By.XPATH, value=x_path)
+    select_chat_by_name(chat)
 
-    driver.execute_script("arguments[0].scrollIntoView(true)", element)
-    # Time to allow Whatsapp Web to complete loading all data
-    time.sleep(30)
+    def scroll_screen_to_top_and_copy():
 
-    while True:
+        x_path = "//div[@role='application']"
+        element = driver.find_element(By.XPATH, value=x_path)
+
         driver.execute_script("arguments[0].scrollIntoView(true)", element)
-        time.sleep(2)
+        # Time to allow Whatsapp Web to complete loading all data
+        time.sleep(30)
 
-        if '24/09/2023' in driver.page_source:
-            text = element.get_attribute("outerHTML")
-            return text
+        while True:
+            driver.execute_script("arguments[0].scrollIntoView(true)", element)
+            time.sleep(2)
 
-html_chat = scroll_screen_to_top_and_copy()
+            if date in driver.page_source:
+                text = element.get_attribute("outerHTML")
+                return text
 
-def process_web_element(element):
-    soup = BeautifulSoup(element, "html.parser")
+    html_chat = scroll_screen_to_top_and_copy()
 
-    elements_with_attribute = soup.select("._1DETJ")
+    def process_web_element(element):
+        soup = BeautifulSoup(element, "html.parser")
 
-    complete_messages = []
+        elements_with_attribute = soup.select("._1DETJ")
 
-    for element in elements_with_attribute:
-        phone_data_time = element['data-pre-plain-text']
-        text_message = element.select(".selectable-text")
-        text_message = BeautifulSoup(text_message[0].span.prettify(), "html.parser")
-        text_message_cleaned = text_message.get_text().replace("\n", "")
-        result = phone_data_time + text_message_cleaned
-        complete_messages.append(result)
+        complete_messages = []
 
-    return complete_messages
+        for element in elements_with_attribute:
+            phone_data_time = element['data-pre-plain-text']
+            text_message = element.select(".selectable-text")
+            text_message = BeautifulSoup(text_message[0].span.prettify(), "html.parser")
+            text_message_cleaned = text_message.get_text().replace("\n", "")
+            result = phone_data_time + text_message_cleaned
+            complete_messages.append(result)
 
-messages_list = process_web_element(html_chat)
+        return complete_messages
 
-def export_to_csv(list):
-    output_data = []
+    messages_list = process_web_element(html_chat)
 
-    for entry in list:
-        match = re.search(r'\[(\d{2}:\d{2}), (\d{2}/\d{2}/\d{4})\] (\+\d+ \d+ \d{4,5}-\d{4}): (.*)', entry)
-        if match:
-            time, date, phone_number, message = match.groups()
-            output_data.append([phone_number, date, time, message])
+    def export_to_csv(list):
+        output_data = []
 
-    csv_filename = "output.csv"
+        for entry in list:
+            match = re.search(r'\[(\d{2}:\d{2}), (\d{2}/\d{2}/\d{4})\] (\+\d+ \d+ \d{4,5}-\d{4}): (.*)', entry)
+            if match:
+                time, date, phone_number, message = match.groups()
+                output_data.append([phone_number, date, time, message])
 
-    with open(csv_filename, mode='w', newline='', encoding='utf8') as csv_file:
-        writer = csv.writer(csv_file)
-        
-        writer.writerow(["Phone Number", "Date", "Time", "Message"])
-        
-        writer.writerows(output_data)
+        csv_filename = chat+".csv"
 
-    print(f'Data exported to "{csv_filename}"')
+        with open(csv_filename, mode='w', newline='', encoding='utf8') as csv_file:
+            writer = csv.writer(csv_file)
+            
+            writer.writerow(["Phone Number", "Date", "Time", "Message"])
+            
+            writer.writerows(output_data)
 
-export_to_csv(messages_list)
+        print(f'Data exported to "{csv_filename}"')
+
+    export_to_csv(messages_list)
