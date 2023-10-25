@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time, csv
 from bs4 import BeautifulSoup
 import re
+from datetime import datetime, timedelta
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get("https://web.whatsapp.com/")
@@ -17,7 +18,20 @@ driver.get("https://web.whatsapp.com/")
 
 chat_list = ["Odonto Classificados BA 1", "Odonto Classificados SP 6"]
 
-date = '20/10/2023'
+selected_date = "20/10/2023"
+
+def get_day_before (date):
+    date_format = "%d/%m/%Y"
+
+    date_to_change = datetime.strptime(date, date_format)
+
+    result_date = date_to_change - timedelta(days=1)
+
+    result = result_date.strftime(date_format)
+
+    return result
+
+one_day_prior = get_day_before(selected_date)
 
 for chat in chat_list:
 
@@ -43,7 +57,7 @@ for chat in chat_list:
             driver.execute_script("arguments[0].scrollIntoView(true)", element)
             time.sleep(2)
 
-            if date in driver.page_source:
+            if one_day_prior in driver.page_source:
                 text = element.get_attribute("outerHTML")
                 return text
 
@@ -69,13 +83,19 @@ for chat in chat_list:
     messages_list = process_web_element(html_chat)
 
     def export_to_csv(list):
-        output_data = []
+        messages_all_dates = []
 
         for entry in list:
             match = re.search(r'\[(\d{2}:\d{2}), (\d{2}/\d{2}/\d{4})\] (\+\d+ \d+ \d{4,5}-\d{4}): (.*)', entry)
             if match:
                 time, date, phone_number, message = match.groups()
-                output_data.append([phone_number, date, time, message])
+                messages_all_dates.append([phone_number, date, time, message])
+        
+        message_specific_date = []
+
+        for item in messages_all_dates:
+            if item[1] == selected_date:
+                message_specific_date.append(item)
 
         csv_filename = chat+".csv"
 
@@ -84,7 +104,7 @@ for chat in chat_list:
             
             writer.writerow(["Phone Number", "Date", "Time", "Message"])
             
-            writer.writerows(output_data)
+            writer.writerows(message_specific_date)
 
         print(f'Data exported to "{csv_filename}"')
 
