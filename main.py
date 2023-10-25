@@ -3,6 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 import time, csv
 from bs4 import BeautifulSoup
@@ -35,11 +36,21 @@ one_day_prior = get_day_before(selected_date)
 
 for chat in chat_list:
 
-    def select_chat_by_name(chat):
-        x_arg = '//span[contains(@title, '+ '"' + chat + '"'+ ')]'
+    def select_chat_by_name(chat_name):
+        x_arg_chat = '//span[contains(@title, '+ '"' + chat_name + '"'+ ')]'
+        x_path_input = "//div[@title='Caixa de texto de pesquisa']"
+        x_path_arrow = "//span[@data-icon='search']"
+        
+        text_input_box = wait.until(EC.presence_of_element_located((By.XPATH, x_path_input)))
+        text_input_box.click()
+        text_input_box.send_keys(chat_name)
         person_title = wait.until(EC.presence_of_element_located((
-        By.XPATH, x_arg)))
+        By.XPATH, x_arg_chat)))
         person_title.click()
+        text_input_box.clear()
+        arrow = wait.until(EC.presence_of_element_located((By.XPATH, x_path_arrow)))
+        arrow.click()
+
         time.sleep(3)
 
     select_chat_by_name(chat)
