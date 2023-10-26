@@ -85,7 +85,7 @@ class WhatsappScrap ():
             if item[1] == selected_date:
                 message_specific_date.append(item)
 
-        csv_filename = chat+".csv"
+        csv_filename = "output/"+chat+".csv"
 
         with open(csv_filename, mode='w', newline='', encoding='utf8') as csv_file:
             writer = csv.writer(csv_file)
