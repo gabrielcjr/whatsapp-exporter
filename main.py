@@ -13,20 +13,20 @@ wait = WebDriverWait(driver, 600)
 
 load_dotenv()
 
-chat_list = json.loads(os.getenv("CHAT_LIST"))
+chat_list: list = json.loads(os.getenv("CHAT_LIST"))
 
-selected_date = os.getenv("DATE")
+selected_date: str = os.getenv("DATE")
 
 ws = WhatsappScrap(chat_list, selected_date)
 
-previous_day = ws.get_previous_day(selected_date)
+previous_day: str = ws.get_previous_day(selected_date)
 
 for chat in chat_list:
 
     ws.select_chat_by_name(chat, wait)
 
-    html_chat = ws.scroll_screen_to_top_and_copy(driver, previous_day)
+    html_chat: str = ws.scroll_screen_to_top_and_copy(driver, previous_day)
 
-    messages_list = ws.process_web_element(html_chat)
+    messages_list: list = ws.process_web_element(html_chat)
 
     ws.export_to_csv(messages_list, selected_date, chat)
