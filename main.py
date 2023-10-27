@@ -1,4 +1,4 @@
-import os, json
+import os, json, time
 
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -20,6 +20,8 @@ selected_date: str = os.getenv("DATE")
 ws = WhatsappScrap(chat_list, selected_date)
 
 previous_day: str = ws.get_previous_day(selected_date)
+
+time.sleep(10)
 
 for chat in chat_list:
 
