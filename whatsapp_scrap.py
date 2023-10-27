@@ -26,9 +26,13 @@ class WhatsappScrap ():
         x_path_input: str = "//div[@title='Caixa de texto de pesquisa']"
         x_path_arrow: str = "//span[@data-icon='search']"
         
+        time.sleep(1)
+
         text_input_box = wait.until(EC.presence_of_element_located((By.XPATH, x_path_input)))
         text_input_box.click()
         text_input_box.send_keys(chat_name)
+
+        time.sleep(1)
 
         chat_title = wait.until(EC.presence_of_element_located((By.XPATH, x_path_chat)))
         chat_title.click()
